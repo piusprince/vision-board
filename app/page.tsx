@@ -9,6 +9,7 @@ import {
 import { api } from "../convex/_generated/api";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -49,54 +50,20 @@ function SignInAndSignUpButtons() {
 }
 
 function SignedInContent() {
-  const { viewer, numbers } =
-    useQuery(api.myFunctions.listNumbers, {
-      count: 10,
-    }) ?? {};
-  const addNumber = useMutation(api.myFunctions.addNumber);
-
-  if (viewer === undefined || numbers === undefined) {
-    return "loading... (consider a loading skeleton)";
-  }
+  const createVision = useMutation(api.vision.createVisionBoard);
 
   return (
     <>
-      <p>Welcome {viewer ?? "N/A"}!</p>
-      <p>
-        Click the button below and open this page in another window - this data
-        is persisted in the Convex cloud database!
-      </p>
-      <p>
-        <button
-          onClick={() => {
-            void addNumber({ value: Math.floor(Math.random() * 10) });
-          }}
-        >
-          Add a random number
-        </button>
-      </p>
-      <p>
-        Numbers:{" "}
-        {numbers?.length === 0
-          ? "Click the button!"
-          : numbers?.join(", ") ?? "..."}
-      </p>
-      <p>
-        Edit <code>convex/myFunctions.ts</code> to change your backend
-      </p>
-      <p>
-        Edit <code>app/page.tsx</code> to change your frontend
-      </p>
-      <p>
-        See <Link href="/server">the /server route</Link> for an example of
-        loading data in a server component
-      </p>
-      <p>
-        Check out{" "}
-        <a target="_blank" href="https://docs.convex.dev/home">
-          Convex docs
-        </a>
-      </p>
+      <h2>Your Vision Board</h2>
+      <Button
+        onClick={() =>
+          createVision({
+            name: "My Vision Board",
+          })
+        }
+      >
+        Create a Vision Board
+      </Button>
     </>
   );
 }
